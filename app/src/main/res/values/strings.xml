@@ -3,4 +3,20 @@
     <string name="Colours">Colours</string>
     <string name="Numbers">Numbers</string>
     <string name="Welcome">Select Game Type</string>
+    <string name="Yellow">Yellow</string>
+    <string name="Blue">Blue</string>
+    <string name="Red">Red</string>
+    <string name="Purple">Purple</string>
+    <string name="Orange">Orange</string>
+    <string name="Green">Green</string>
+    <string name="Brown">Brown</string>
+    <string name="Black">Black</string>
+    <string name="gm">GameManager</string>
+    <string name="addP">Add Player</string>
+    <string name="cancel">Cancel</string>
+    <string name="player_added">Player Added</string>
+    <string name="invalidEmpty">Name cannot be empty!</string>
+    <string name="options">Options</string>
+    <string name="playerList">Player List</string>
+    <string name="start">Start Game</string>
 </resources>
