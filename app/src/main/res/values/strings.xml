@@ -14,9 +14,15 @@
     <string name="gm">GameManager</string>
     <string name="addP">Add Player</string>
     <string name="cancel">Cancel</string>
-    <string name="player_added">Player Added</string>
+    <string name="player_added">player Added</string>
     <string name="invalidEmpty">Name cannot be empty!</string>
     <string name="options">Options</string>
     <string name="playerList">Player List</string>
     <string name="start">Start Game</string>
+    <string name="genCol">Assign Colours</string>
+    <string name="genNum">Assign Numbers</string>
+    <string name="save">Save</string>
+    <string name="player_saved">saved successfully</string>
+    <string name="max8">You already have a maximum of 8 players!</string>
+    <string name="max7">You already have a maximum of 7 players!</string>
 </resources>

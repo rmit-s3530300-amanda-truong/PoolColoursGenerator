@@ -33,4 +33,9 @@ public class PlayerManager implements Serializable{
     {
         return playerList;
     }
+
+    public Player findPlayer(int index)
+    {
+        return playerList.get(index);
+    }
 }

@@ -32,6 +32,11 @@ public class Player implements Serializable{
         chosenNumbers.add(num2);
     }
 
+    public void editName(String newName)
+    {
+        name = newName;
+    }
+
     public void clearNums()
     {
         chosenNumbers.clear();

@@ -40,6 +40,11 @@ public class GameManager implements Serializable{
         gameType = type;
     }
 
+    public int getGameType()
+    {
+        return gameType;
+    }
+
     public void genColList()
     {
         colList = new ArrayList<>();
@@ -115,5 +120,10 @@ public class GameManager implements Serializable{
     public ArrayList<Player> getPlayerList()
     {
         return playerManager.getList();
+    }
+
+    public Player findPlayer(int index)
+    {
+         return playerManager.findPlayer(index);
     }
 }

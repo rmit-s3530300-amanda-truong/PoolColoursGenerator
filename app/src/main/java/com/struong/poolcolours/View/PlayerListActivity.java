@@ -36,6 +36,7 @@ public class PlayerListActivity extends AppCompatActivity{
     private String[] menuItems;
     private PlayerAdapter adapter;
     private AlertDialog.Builder alertBuilder;
+    private Button btStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,16 @@ public class PlayerListActivity extends AppCompatActivity{
         if(extras!=null)
         {
             gm = (GameManager) extras.get(getResources().getString(R.string.gm));
+        }
+
+        btStart = (Button) findViewById(R.id.btDone);
+        if(gm.getGameType() == 0)
+        {
+            btStart.setText(getResources().getString(R.string.genCol));
+        }
+        else
+        {
+            btStart.setText(getResources().getString(R.string.genNum));
         }
 
         controller = new PlayerAddController(this, gm);
@@ -76,20 +87,41 @@ public class PlayerListActivity extends AppCompatActivity{
         if(menuItemName.equals(menuItems[0]))
         {
             //edit player name
-//            Intent intent = new Intent(this, EditContactActivity.class);
-//            intent.putExtra(getResources().getString(R.string.name), adapter.getItem(listPos).getName());
-//            intent.putExtra(getResources().getString(R.string.email), adapter.getItem(listPos).getEmail());
-//            intent.putExtra(getResources().getString(R.string.id), adapter.getItem(listPos).getID());
-//            intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
-//            intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
-//            intent.putExtra(getResources().getString(R.string.location), location);
-//            startActivity(intent);
+            LayoutInflater li = LayoutInflater.from(this);
+            final View dialogView = li.inflate(R.layout.addplayer_dialog, null);
+            alertBuilder = new AlertDialog.Builder(this);
+            alertBuilder.setView(dialogView);
+            alertBuilder.setTitle(getResources().getString(R.string.addP));
+            final EditText et = (EditText) dialogView.findViewById(R.id.etAddPlayer);
+            final Player p = gm.findPlayer(listPos);
+            et.setText(p.getName());
+            alertBuilder
+                    .setNegativeButton(getResources().getString(R.string.cancel), null)
+                    .setPositiveButton(getResources().getString(R.string.save), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if(et.getText().toString().length() != 0)
+                            {
+                                p.editName(et.getText().toString());
+                                adapter.notifyDataSetChanged();
+                                Log.i("asdlkfjsdlkf", gm.getPlayerList().toString());
+                                Toast.makeText(getApplicationContext(), et.getText().toString() + " " + getResources().getString(R.string.player_saved), Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.invalidEmpty), Toast.LENGTH_SHORT).show();
+                                //make it loop if name is empty
+                            }
+                        }
+                    });
+            alertBuilder.show();
         }
         else if(menuItemName.equals(menuItems[1]))
         {
             //remove player
-//            friendListController.removeFriend(adapter.getItem(listPos));
-//            adapter.notifyDataSetChanged();
+            Player p = gm.findPlayer(listPos);
+            gm.removePlayer(p);
+            adapter.notifyDataSetChanged();
         }
         return true;
     }
@@ -105,36 +137,62 @@ public class PlayerListActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item.getItemId() == R.id.action_add)
+        if(item.getItemId() == R.id.action_add) 
         {
-            LayoutInflater li = LayoutInflater.from(this);
-            final View dialogView = li.inflate(R.layout.addplayer_dialog, null);
-            alertBuilder = new AlertDialog.Builder(this);
-            alertBuilder.setView(dialogView);
-            alertBuilder.setTitle(getResources().getString(R.string.addP));
-            final EditText et = (EditText) dialogView.findViewById(R.id.etAddPlayer);
-            alertBuilder
-                    .setNegativeButton(getResources().getString(R.string.cancel), null)
-                    .setPositiveButton(getResources().getString(R.string.addP), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if(et.getText().toString().length() != 0)
-                            {
-                                gm.addPlayer(new Player(et.getText().toString()));
-                                adapter.notifyDataSetChanged();
-                                Log.i("asdlkfjsdlkf", gm.getPlayerList().toString());
-                                Toast.makeText(getApplicationContext(), et.getText().toString() + " " + getResources().getString(R.string.player_added), Toast.LENGTH_SHORT).show();
-                            }
-                            else
-                            {
-                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.invalidEmpty), Toast.LENGTH_SHORT).show();
-                                //make it loop if name is empty
-                            }
-                        }
-                    });
-            alertBuilder.show();
+            if (gm.getGameType() == 0) 
+            {
+                if (gm.getPlayerList().size() == 8)
+                {
+                    Toast.makeText(this, getResources().getString(R.string.max8), Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    showAdd();
+                }
+            } 
+            else if (gm.getGameType() == 1) 
+            {
+                if (gm.getPlayerList().size() == 7)
+                {
+                    Toast.makeText(this, getResources().getString(R.string.max7), Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    showAdd();
+                }
+            }
         }
         return true;
+    }
+    
+    public void showAdd()
+    {
+        LayoutInflater li = LayoutInflater.from(this);
+        final View dialogView = li.inflate(R.layout.addplayer_dialog, null);
+        alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setView(dialogView);
+        alertBuilder.setTitle(getResources().getString(R.string.addP));
+        final EditText et = (EditText) dialogView.findViewById(R.id.etAddPlayer);
+        alertBuilder
+                .setNegativeButton(getResources().getString(R.string.cancel), null)
+                .setPositiveButton(getResources().getString(R.string.addP), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(et.getText().toString().length() != 0)
+                        {
+                            gm.addPlayer(new Player(et.getText().toString()));
+                            adapter.notifyDataSetChanged();
+                            Log.i("asdlkfjsdlkf", gm.getPlayerList().toString());
+                            Toast.makeText(getApplicationContext(), et.getText().toString() + " " + getResources().getString(R.string.player_added), Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.invalidEmpty), Toast.LENGTH_SHORT).show();
+                            //make it loop if name is empty
+                        }
+                    }
+                });
+        alertBuilder.show();
     }
 
     @Override
